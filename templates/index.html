@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Clasificador</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
+    </head>
+    <body>
+        <h1>Clasificadors de Animales</h1>
+        
+        <form class="conteiner_input" action="/", method="post" enctype="multipart/form-data">
+            <label for="files" class="drop_container" id="dropcontainer">
+                <img class="image" src="{{ url_for('static', filename='images/foto.png') }}">
+                <span class="drop_title">Coloque los archivos .png, .jpg, .jpeg y/o .mp4 aquí</span>
+                o
+                <input id="files" class="file" type="file" name="imagefile" accept=".png, .jpg, .jpeg, .mp4" multiple>
+            </label>
+            <input class="btn" type="submit" value="Predecir" disabled="true">
+        </form>
+
+        {% if download_link %}
+        <div class="box_download">
+            <div class="container_download">
+                <a class="download" href="{{ download_link }}"><img class="image_download" src="{{ url_for('static', filename='images/icons8-descargar-64.png') }}"> Descargar informe</a>
+            </div>
+        </div>
+        {% endif %}
+        <script>
+            const fileInput = document.querySelector('input[name="imagefile"]');
+            const submitButton = document.querySelector('input[type="submit"]');
+            const drop_container = document.getElementById("dropcontainer")
+
+            submitButton.disabled = true;
+
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) {
+                    submitButton.disabled = false;
+                } else {
+                    submitButton.disabled = true;
+                }
+            });
+
+            drop_container.addEventListener("dragover", (e) => {
+                // evitar que por defecto se permita la caída
+                e.preventDefault()
+            }, false)
+
+            drop_container.addEventListener("dragleave", () => {
+                drop_container.classList.add("drag_active")
+            })
+
+            drop_container.addEventListener("dragleave", () => {
+                drop_container.classList.remove("drag_active")
+            })
+
+            drop_container.addEventListener("drop", (e) => {
+                drop_container.classList.remove("drag_active")
+                fileInput.files = e.dataTransfer.files
+                submitButton.disabled = false;
+            })
+        </script>
+    </body>
+</html>
